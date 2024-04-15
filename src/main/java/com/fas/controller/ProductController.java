@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fas.entity.Product;
@@ -36,29 +36,29 @@ public class ProductController {
 	}
 
 	@GetMapping(value = "/code")
-	public ResponseEntity<Product> fetchProductByCode(@RequestParam(name = "code") int code) {
+	public ResponseEntity<Product> fetchProductByCode(@RequestHeader(value = "code") int code) {
 		return productService.fetchProductByCode(code);
 	}
 
 	@PutMapping(value = "/code/price")
-	public ResponseEntity<String> updatePrice(@RequestParam(name = "productPrice") double orderPrice,
-			@RequestParam(name = "code") int code) {
+	public ResponseEntity<String> updatePrice(@RequestHeader(value = "productPrice") double orderPrice,
+			@RequestHeader(value = "code") int code) {
 		return productService.updatePrice(orderPrice, code);
 	}
 
 	@DeleteMapping(value = "/code")
-	public ResponseEntity<String> deleteProductByCode(@RequestParam(name = "code") int code) {
+	public ResponseEntity<String> deleteProductByCode(@RequestHeader(value = "code") int code) {
 		return productService.deleteProductByCode(code);
 	}
 
 	@GetMapping(value = "/price")
-	public ResponseEntity<List<Product>> fetchByPriceRange(@RequestParam(name = "lprice") double lprice,
-			@RequestParam(name = "uprice") double uprice) {
+	public ResponseEntity<List<Product>> fetchByPriceRange(@RequestHeader(value = "lprice") double lprice,
+			@RequestHeader(value = "uprice") double uprice) {
 		return productService.fetchByPriceRange(lprice, uprice);
 	}
 
 	@GetMapping(value = "/category")
-	public ResponseEntity<List<Product>> fetchByCategory(@RequestParam(name = "category") String category) {
+	public ResponseEntity<List<Product>> fetchByCategory(@RequestHeader(value = "category") String category) {
 		return productService.fetchByCategory(category);
 	}
 }

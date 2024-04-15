@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fas.entity.Orders;
@@ -37,18 +37,18 @@ public class OrderController {
 	}
 
 	@GetMapping(value = "/id")
-	public ResponseEntity<Orders> fetchOrderById(@RequestParam(name = "id") int id) {
+	public ResponseEntity<Orders> fetchOrderById(@RequestHeader(value = "id") int id) {
 		return orderService.fetchOrderById(id);
 	}
 
 	@GetMapping(value = "/date")
-	public ResponseEntity<List<Orders>> fetchOrderByOrderDate(@RequestParam(name = "orderDate") LocalDate orderDate) {
+	public ResponseEntity<List<Orders>> fetchOrderByOrderDate(@RequestHeader(value = "orderDate") LocalDate orderDate) {
 		return orderService.fetchOrderByOrderDate(orderDate);
 	}
 
 	@PutMapping(value = "/status")
-	public ResponseEntity<String> updateOrderStatus(@RequestParam(name = "id") int id,
-			@RequestParam(name = "status") String status) {
+	public ResponseEntity<String> updateOrderStatus(@RequestHeader(value = "id") int id,
+			@RequestHeader(value = "status") String status) {
 		return orderService.updateOrderStatus(id, status);
 	}
 }

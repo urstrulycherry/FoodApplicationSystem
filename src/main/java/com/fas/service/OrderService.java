@@ -3,6 +3,8 @@ package com.fas.service;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,12 +29,16 @@ public class OrderService {
 	}
 
 	public ResponseEntity<String> createOrder(Orders order, int id) {
-		final String apiUrl = "http://localhost:8080/api/user?id=" + id;
-		ResponseEntity<User> responseEntity = restTemplateBean.getRestTemplate().exchange(apiUrl, HttpMethod.GET, null,
-				User.class);
+		final String apiUrl = "http://localhost:8080/api/user/id";
+
+		HttpHeaders httpHeaders = restTemplateBean.getHttpHeaders();
+		httpHeaders.add("Id", Integer.toString(id));
+		HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
+		ResponseEntity<User> responseEntity = restTemplateBean.getRestTemplate().exchange(apiUrl, HttpMethod.GET,
+				httpEntity, User.class);
 
 		User user = responseEntity.getBody();
-		if (user != null) {
+		if (user != null && responseEntity.getStatusCode().is2xxSuccessful()) {
 			order.setCustomerName(user.getUserName());
 			order.setCustomerAddress(user.getUserAddress());
 			order.setCustomerPhone(user.getUserPhone());
@@ -40,7 +46,8 @@ public class OrderService {
 			orderRepo.save(order);
 			return new ResponseEntity<String>("Order created Successfully!", HttpStatus.OK);
 		}
-		return new ResponseEntity<String>("Order is not created successfully", HttpStatus.BAD_REQUEST);
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body("Failed to create order: User not found or request failed");
 	}
 
 	public ResponseEntity<List<Orders>> fetchAllOrders() {

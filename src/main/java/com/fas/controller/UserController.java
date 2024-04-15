@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @RestController
@@ -41,15 +40,20 @@ public class UserController {
         return userService.validateUser(userPhone, userPassword);
     }
 
-    @GetMapping(path = "/id")
-    public ResponseEntity<User> fetchByType(@RequestParam(name = "id") String userType) {
+    @GetMapping(path = "/type")
+    public ResponseEntity<User> fetchByType(@RequestHeader(name = "userType") String userType) {
         return userService.fetchUserById(Integer.parseInt(userType));
     }
 
+    @GetMapping(path = "/id")
+    public ResponseEntity<User> fetchById(@RequestHeader(value = "Id") int id) {
+        return userService.fetchUserById(id);
+    }
+
     @PutMapping(path = "/info")
-    public ResponseEntity<String> updateUserInfo(@RequestParam(name = "id", required = true) int id,
-            @RequestParam(name = "phno", required = false) Long phno,
-            @RequestParam(name = "address", required = false) String userAddress) {
-        return userService.updateUserInfo(id, phno, userAddress);
+    public ResponseEntity<String> updateUserInfo(@RequestHeader(value = "Id", required = true) int Id,
+            @RequestHeader(value = "userPhone", required = false) Long phno,
+            @RequestHeader(value = "userAddress", required = false) String userAddress) {
+        return userService.updateUserInfo(Id, phno, userAddress);
     }
 }
