@@ -3,9 +3,6 @@ package com.fas.service;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fas.entity.Orders;
 import com.fas.entity.User;
 import com.fas.repository.OrderRepo;
-import com.fas.utils.RestTemplateBean;
+import com.fas.repository.UserRepo;
 
 import jakarta.transaction.Transactional;
 
@@ -21,24 +18,16 @@ import jakarta.transaction.Transactional;
 public class OrderService {
 
 	private OrderRepo orderRepo;
-	private RestTemplateBean restTemplateBean;
+	private UserRepo userRepo;
 
-	public OrderService(OrderRepo orderRepo, RestTemplateBean restTemplateBean) {
+	public OrderService(OrderRepo orderRepo, UserRepo userRepo) {
 		this.orderRepo = orderRepo;
-		this.restTemplateBean = restTemplateBean;
+		this.userRepo = userRepo;
 	}
 
-	public ResponseEntity<String> createOrder(Orders order, int id) {
-		final String apiUrl = "http://localhost:8080/api/user/id";
-
-		HttpHeaders httpHeaders = restTemplateBean.getHttpHeaders();
-		httpHeaders.add("Id", Integer.toString(id));
-		HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
-		ResponseEntity<User> responseEntity = restTemplateBean.getRestTemplate().exchange(apiUrl, HttpMethod.GET,
-				httpEntity, User.class);
-
-		User user = responseEntity.getBody();
-		if (user != null && responseEntity.getStatusCode().is2xxSuccessful()) {
+	public ResponseEntity<String> createOrder(Orders order) {
+		User user = userRepo.findByUserId(order.getUserId());
+		if (user != null) {
 			order.setCustomerName(user.getUserName());
 			order.setCustomerAddress(user.getUserAddress());
 			order.setCustomerPhone(user.getUserPhone());
@@ -56,6 +45,10 @@ public class OrderService {
 
 	public ResponseEntity<Orders> fetchOrderById(int id) {
 		return new ResponseEntity<Orders>(orderRepo.findById(id), HttpStatus.OK);
+	}
+
+	public ResponseEntity<List<Orders>> fetchOrderbyUserId(int id) {
+		return new ResponseEntity<List<Orders>>(orderRepo.findByUserId(id), HttpStatus.OK);
 	}
 
 	public ResponseEntity<List<Orders>> fetchOrderByOrderDate(LocalDate orderDate) {

@@ -42,17 +42,17 @@ public class UserService {
         return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<String> updateUserInfo(int id, Long phno, String address) {
+    public ResponseEntity<String> updateUserInfo(int id, Long phno, String address, String name, String password) {
         if (phno != null || address != null) {
             User user = userRepo.findById(id).get();
-            if (phno != null && address != null) {
-                user.setUserAddress(address);
+            if (phno != null)
                 user.setUserPhone(phno);
-            } else if (phno != null && address == null)
-                user.setUserPhone(phno);
-            else {
+            if (address != null)
                 user.setUserAddress(address);
-            }
+            if (name != null)
+                user.setUserName(name);
+            if (password != null)
+                user.setUserPassword(password);
             userRepo.save(user);
             return new ResponseEntity<String>("User Information updated successfully!", HttpStatus.OK);
         }

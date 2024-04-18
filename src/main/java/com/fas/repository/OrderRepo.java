@@ -17,4 +17,6 @@ public interface OrderRepo extends CrudRepository<Orders, Integer>{
 	
 	List<Orders> findByOrderDate(LocalDate orderDate);
 
+	List<Orders> findByUserId(int userId);
+
 }

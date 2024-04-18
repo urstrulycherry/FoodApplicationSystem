@@ -109,7 +109,7 @@
     <div class="header">
         <div class="container mt-5 floating-header">
             <div class="row justify-content-md-center m-1">
-                <h1 class="text-center project-name">Food Panda</h1>
+                <h1 class="text-center project-name"></h1>
                 <ul>
                     <li><a href="home.html" class="active">Home</a></li>
                     <li><a href="cart.html">Cart</a></li>
@@ -129,8 +129,8 @@
                     <option selected disabled>Sort by</option>
                     <option value="price-asc">Price ↓</option>
                     <option value="price-desc">Price ↑</option>
-                    <option value="name-asc">Name ↓</option>
-                    <option value="name-desc">Name ↑</option>
+                    <option value="productName-asc">Name ↓</option>
+                    <option value="productName-desc">Name ↑</option>
                 </select>
                 <select class="form-select" id="category" aria-label="Default select example">
                     <option selected disabled>Choose Category</option>
@@ -175,10 +175,10 @@
         </div>
     </template>
 
-
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="scripts/script.js"></script>
     <script>
         let items = [];
         let itemsMap = {};
@@ -187,9 +187,8 @@
         let category;
         let searchKey;
         const categories = new Set();
-        axios.get('http://localhost:8080/api/product')
+        axios.get(URL_MAP.product)
             .then((response) => {
-                console.log(response.data);
                 items = response.data;
                 fillData(items);
                 items.forEach((item) => {
@@ -207,16 +206,6 @@
             .catch((error) => {
                 console.error(error);
             });
-
-        window.addEventListener('scroll', () => {
-            const header = document.querySelector('.header');
-            const floatingHeader = document.querySelector('.floating-header');
-            if (floatingHeader.getBoundingClientRect().top <= 0) {
-                header.classList.add('black');
-            } else {
-                header.classList.remove('black');
-            }
-        });
 
         const fillData = (itemsData) => {
             const template = document.getElementById('menu-item-template');
@@ -251,7 +240,6 @@
         }
 
         const onAddToCart = (productCode) => {
-            console.log(`Add to cart clicked for product code: ${productCode}`);
             document.querySelector(`.add-cart-${productCode}`).style.display = 'none';
             document.querySelector(`.add-remove-${productCode}`).style.display = 'flex';
             cart[productCode] = {
@@ -264,7 +252,6 @@
         }
 
         const incCount = (productCode) => {
-            console.log(`Increment count clicked for product code: ${productCode}`);
             cart[productCode].count += 1;
             document.querySelector(`.count-${productCode}`).textContent = cart[productCode].count;
             if (cart[productCode].count === 10) {
@@ -275,13 +262,11 @@
         }
 
         const decCount = (productCode) => {
-            console.log(`Decrement count clicked for product code: ${productCode}`);
             cart[productCode].count -= 1;
             document.querySelector(`.count-${productCode}`).textContent = cart[productCode].count;
             if (cart[productCode].count === 0) {
                 document.querySelector(`.add-remove-${productCode}`).style.display = 'none';
                 document.querySelector(`.add-cart-${productCode}`).style.display = 'block';
-                // remove productcode from cart
                 delete cart[productCode];
             }
             document.querySelector(`.inc-count-${productCode}`).disabled = false;
@@ -289,24 +274,20 @@
             cartCounter();
         }
 
-        // on sort, sort the items 
         document.getElementById('sort').addEventListener('change', (e) => {
             const sortValue = e.target.value;
-            console.log(`Sort by: ${sortValue}`);
             sortBy = sortValue;
             filterItems();
         });
 
         document.getElementById('category').addEventListener('change', (e) => {
             const categoryValue = e.target.value;
-            console.log(`Category: ${categoryValue}`);
             category = categoryValue;
             filterItems();
         });
 
         document.querySelector('.search-input input').addEventListener('input', (e) => {
             const searchValue = e.target.value;
-            console.log(`Search: ${searchValue}`);
             searchKey = searchValue;
             filterItems();
         });
@@ -317,9 +298,9 @@
                 const [key, order] = sortBy.split('-');
                 filteredItems = filteredItems.sort((a, b) => {
                     if (order === 'asc') {
-                        return a[key] - b[key];
+                        return key == 'price' ? a[key] - b[key] : a[key].localeCompare(b[key]);
                     } else {
-                        return b[key] - a[key];
+                        return key == 'price' ? b[key] - a[key] : b[key].localeCompare(a[key]);
                     }
                 });
             }

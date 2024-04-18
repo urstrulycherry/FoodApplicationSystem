@@ -53,7 +53,10 @@ public class UserController {
     @PutMapping(path = "/info")
     public ResponseEntity<String> updateUserInfo(@RequestHeader(value = "Id", required = true) int Id,
             @RequestHeader(value = "userPhone", required = false) Long phno,
-            @RequestHeader(value = "userAddress", required = false) String userAddress) {
-        return userService.updateUserInfo(Id, phno, userAddress);
+            @RequestHeader(value = "userAddress", required = false) String userAddress,
+            @RequestHeader(value = "userName", required = false) String userName,
+            @RequestHeader(value = "userPassword", required = false) String userPassword
+            ) {
+        return userService.updateUserInfo(Id, phno, userAddress, userName, userPassword);
     }
 }

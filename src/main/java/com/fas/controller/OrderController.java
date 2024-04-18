@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fas.entity.Orders;
@@ -27,8 +26,8 @@ public class OrderController {
 	}
 
 	@PostMapping
-	public ResponseEntity<String> createOrder(@RequestBody Orders order, @RequestHeader(value = "id") int id) {
-		return orderService.createOrder(order, id);
+	public ResponseEntity<String> createOrder(@RequestBody Orders order) {
+		return orderService.createOrder(order);
 	}
 
 	@GetMapping
@@ -39,6 +38,11 @@ public class OrderController {
 	@GetMapping(value = "/id")
 	public ResponseEntity<Orders> fetchOrderById(@RequestHeader(value = "id") int id) {
 		return orderService.fetchOrderById(id);
+	}
+
+	@GetMapping(value = "/userId")
+	public ResponseEntity<List<Orders>> fetchOrderbyUserId(@RequestHeader(value = "userId") int id) {
+		return orderService.fetchOrderbyUserId(id);
 	}
 
 	@GetMapping(value = "/date")

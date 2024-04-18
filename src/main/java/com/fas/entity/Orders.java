@@ -22,12 +22,13 @@ public class Orders {
 	private String customerName;
 	private String customerAddress;
 	private long customerPhone;
+	private int userId;
 
 	public Orders() {
 	}
 
 	public Orders(int orderId, LocalDate orderDate, String orderCode, String orderName, String qty,
-			double total_amt, String status, String customerName, String customerAddress, long customerPhone) {
+			double total_amt, String status, String customerName, String customerAddress, long customerPhone, int userId) {
 		super();
 		this.orderId = orderId;
 		this.orderDate = orderDate;
@@ -39,6 +40,7 @@ public class Orders {
 		this.customerName = customerName;
 		this.customerAddress = customerAddress;
 		this.customerPhone = customerPhone;
+		this.userId = userId;
 	}
 
 	public int getOrderId() {
@@ -111,6 +113,14 @@ public class Orders {
 
 	public void setCustomerAddress(String customerAddress) {
 		this.customerAddress = customerAddress;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 
 	public long getCustomerPhone() {

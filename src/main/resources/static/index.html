@@ -42,7 +42,7 @@
 <body>
     <div class="container mt-5 d-flex justify-content-center login-reg-container">
         <div class="row justify-content-md-center m-1 p-md-5 p-2 login-reg">
-            <h2 class="text-center mb-5">Food Panda</h2>
+            <h2 class="text-center mb-5 project-name"></h2>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login-tab-pane" type="button" role="tab"
@@ -107,6 +107,7 @@
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="scripts/script.js"></script>
         <script>
             if (sessionStorage.getItem('loggedIn') === "true" && sessionStorage.getItem('userId') !== null) {
                 window.location.href = '/home.html';
@@ -125,17 +126,15 @@
                 document.getElementById('error-msg').innerText = '';
                 const phone = document.getElementById('phone').value;
                 const password = document.getElementById('password').value;
-                console.log(`Phone: ${phone}, Password: ${password}`);
                 document.getElementById('login-form').reset();
-                axios.get('http://localhost:8080/api/user/validateUser', {
+                axios.get(URL_MAP.validateUser, {
                     headers: {
                         userPhone: phone,
                         userPassword: password
                     }
                 }).then((response) => {
-                    console.log(response.data);
                     sessionStorage.setItem('loggedIn', true);
-                    sessionStorage.setItem('userId', phone);
+                    sessionStorage.setItem('userId', response.data.userId);
                     window.location.href = '/home.html';
                 }).catch((error) => {
                     document.getElementById('error-msg').innerText = 'Invalid Credentials';
@@ -150,18 +149,16 @@
                 const password = document.getElementById('password-r').value;
                 const passwordConfirm = document.getElementById('password-r-c').value;
                 if (password !== passwordConfirm) {
-                    console.log('Passwords do not match');
                     document.getElementById('password-r-c').setCustomValidity('Passwords do not match');
                     document.getElementById('password-r-c').reportValidity();
                     return;
                 }
                 document.getElementById('register-form').reset();
-                axios.post('http://localhost:8080/api/user', {
+                axios.post(URL_MAP.createUser, {
                     userName: name,
                     userPassword: password,
                     userPhone: phone
                 }).then((response) => {
-                    console.log(response.data);
                     sessionStorage.setItem('loggedIn', true);
                     sessionStorage.setItem('userId', response.data.userId);
                     window.location.href = '/home.html';
