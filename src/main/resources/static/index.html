@@ -109,10 +109,6 @@
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="scripts/script.js"></script>
         <script>
-            if (sessionStorage.getItem('loggedIn') === "true" && sessionStorage.getItem('userId') !== null) {
-                window.location.href = '/home.html';
-            }
-
             const handleSignUpTab = () => {
                 document.getElementById('register-tab').click();
             }
@@ -135,7 +131,12 @@
                 }).then((response) => {
                     sessionStorage.setItem('loggedIn', true);
                     sessionStorage.setItem('userId', response.data.userId);
-                    window.location.href = '/home.html';
+                    if (response.data.userType == 'Admin') {
+                        sessionStorage.setItem('admin', true);
+                        window.location.href = '/admin.html';
+                    } else {
+                        window.location.href = '/home.html';
+                    }
                 }).catch((error) => {
                     document.getElementById('error-msg').innerText = 'Invalid Credentials';
                     console.error('Invalid Credentials', error)

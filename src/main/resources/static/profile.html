@@ -100,7 +100,6 @@
                 }
             }).then((response) => {
                 const user = response.data;
-                console.log(user);
                 document.getElementById('name').value = user.userName;
                 document.getElementById('mobile').value = user.userPhone;
                 document.getElementById('address').value = user.userAddress;
@@ -111,7 +110,6 @@
         }
 
         const handleProfileUpdate = () => {
-            console.log('handleProfileUpdate');
             document.querySelector('.update-btn-td button').disabled = false;
         }
 
