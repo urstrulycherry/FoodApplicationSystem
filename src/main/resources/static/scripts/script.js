@@ -3,15 +3,21 @@ const PROJECT_NAME = 'Food Panda';
 const PORT = 8080;
 const API_END_POINT = `http://localhost:${PORT}/api/`;
 
+const adminPages = ['/admin.html', '/adminOrders.html'];
+
+const path = location.pathname;
 if (sessionStorage.getItem('loggedIn') === "true" && sessionStorage.getItem('userId') !== null) {
-    console.log('here out', location.pathname);
-    if (sessionStorage.getItem('admin') === 'true' && location.pathname !== '/admin.html') {
-        location.href = '/admin.html';
-    } else if (!sessionStorage.getItem('admin') && (location.pathname === '/index.html' || location.pathname === '/admin.html')) {
-        location.href = '/home.html';
+    if (sessionStorage.getItem('admin') === 'true') {
+        if (!adminPages.includes(path)) {
+            location.href = '/admin.html';
+        }
+    } else {
+        if (adminPages.includes(path)) {
+            location.href = '/home.html';
+        }
     }
 } else {
-    if (location.pathname !== '/index.html') {
+    if (path !== '/index.html') {
         location.href = '/index.html';
     }
 }
