@@ -116,6 +116,10 @@
                                             <label for="expDate" class="form-label">Expiry Date</label>
                                             <input type="date" class="form-control" id="expDate" required>
                                         </div>
+                                        <div class="mb-3">
+                                            <label for="image" class="form-label">Image</label>
+                                            <input type="file" class="form-control" id="image" required accept="image/*">
+                                        </div>
                                         <button type="submit" class="btn btn-dark ews-bt" name="Add Product">Add Product</button><br><br>
                                     </form>
                                 </div>
@@ -178,7 +182,21 @@
     <script>
         let products;
         let selectedProductCode;
-        document.getElementById('new-form').addEventListener('submit', (e) => {
+        async function encodeImageToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const base64String = btoa(reader.result);
+                    resolve(base64String);
+                };
+                reader.onerror = error => {
+                    reject(error);
+                };
+                reader.readAsBinaryString(file);
+            });
+        }
+
+        document.getElementById('new-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const data = {
                 productName: document.getElementById('productName').value,
@@ -186,8 +204,10 @@
                 category: document.getElementById('category').value,
                 price: document.getElementById('price').value,
                 mfgDate: document.getElementById('mfgDate').value,
-                expDate: document.getElementById('expDate').value
+                expDate: document.getElementById('expDate').value,
+                image: await encodeImageToBase64(document.getElementById('image').files[0])
             };
+            console.log(data);
             axios.post(URL_MAP.product, data).then((response) => {
                 toastr.success('Product added successfully');
                 document.getElementById('new-form').reset();

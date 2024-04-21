@@ -101,6 +101,15 @@
             display: flex;
             justify-content: center;
         }
+
+        .menu-item {
+            width: 100%;
+        }
+
+        .image img {
+            width: 100%;
+            aspect-ratio: 1/1;
+        }
     </style>
 
 </head>
@@ -220,6 +229,7 @@
                 cardItem.querySelector('.dec-count').classList.add(`dec-count-${item.productCode}`);
                 cardItem.querySelector('.inc-count').classList.add(`inc-count-${item.productCode}`);
                 cardItem.querySelector('.count').classList.add(`count-${item.productCode}`);
+                cardItem.querySelector('.image img').src = `data:image/png;base64,${item.image}`;
 
                 cardItem.querySelector('.add-cart').addEventListener('click', () => {
                     onAddToCart(item.productCode);
